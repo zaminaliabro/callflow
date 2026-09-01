@@ -1,0 +1,91 @@
+// CallFlow — Prisma schema (PostgreSQL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  AGENT
+}
+
+// Outcome of a single call, and the current stage a customer sits at.
+enum CallStatus {
+  INTERESTED
+  NOT_INTERESTED
+  CALLBACK
+  NO_ANSWER
+  SALE
+}
+
+enum CustomerStatus {
+  NEW
+  INTERESTED
+  NOT_INTERESTED
+  CALLBACK
+  NO_ANSWER
+  SALE
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(AGENT)
+  phone         String?
+  isActive      Boolean  @default(true)
+  monthlyTarget Float    @default(0) // sales-amount target per month
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  assignedCustomers Customer[] @relation("AssignedAgent")
+  createdCustomers  Customer[] @relation("CreatedBy")
+  calls             Call[]
+}
+
+model Customer {
+  id             String         @id @default(cuid())
+  name           String
+  phone          String
+  email          String?
+  city           String?
+  status         CustomerStatus @default(NEW)
+  notes          String?
+  lastCallAt     DateTime?
+  nextFollowUpAt DateTime?
+
+  assignedAgentId String?
+  assignedAgent   User?   @relation("AssignedAgent", fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  createdById     String?
+  createdBy       User?   @relation("CreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  calls     Call[]
+
+  @@index([assignedAgentId])
+  @@index([status])
+}
+
+model Call {
+  id         String     @id @default(cuid())
+  customerId String
+  customer   Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  agentId    String
+  agent      User       @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  status     CallStatus
+  notes      String?
+  saleAmount Float      @default(0)
+  followUpAt DateTime?
+  createdAt  DateTime   @default(now())
+
+  @@index([agentId])
+  @@index([customerId])
+  @@index([createdAt])
+}
