@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 
-// Single PrismaClient for the process (avoids exhausting the connection pool
-// under nodemon reloads).
+// One PrismaClient per process, reused across serverless warm invocations and
+// across nodemon reloads in dev.
 const globalForPrisma = globalThis
 
 export const prisma =
-  globalForPrisma.prisma ??
+  globalForPrisma.__callflowPrisma ??
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+globalForPrisma.__callflowPrisma = prisma

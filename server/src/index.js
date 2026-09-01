@@ -1,29 +1,10 @@
 import 'dotenv/config'
-import 'express-async-errors'
-import express from 'express'
-import cors from 'cors'
-import morgan from 'morgan'
-
-import routes from './routes/index.js'
-import { errorHandler, notFoundHandler } from './middleware/error.js'
+import app from './app.js'
 import { prisma } from './prisma.js'
 
-const app = express()
+// Local development entry point. On Vercel the app is served from api/index.js
+// as a serverless function and this file is never executed.
 const PORT = process.env.PORT || 5000
-
-app.use(
-  cors({
-    origin: process.env.CLIENT_ORIGIN?.split(',') || '*',
-    credentials: true,
-  }),
-)
-app.use(express.json())
-if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'))
-
-app.use('/api', routes)
-
-app.use(notFoundHandler)
-app.use(errorHandler)
 
 async function start() {
   try {

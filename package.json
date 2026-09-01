@@ -1,0 +1,30 @@
+{
+  "name": "callflow",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CallFlow — Sales Call Management System (Vercel deployment root)",
+  "engines": {
+    "node": ">=18.18"
+  },
+  "scripts": {
+    "postinstall": "prisma generate --schema server/prisma/schema.prisma",
+    "vercel-build": "prisma generate --schema server/prisma/schema.prisma && npm --prefix client install && npm --prefix client run build",
+    "dev": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}
