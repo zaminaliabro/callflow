@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CallFlow — Project Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --brand:#1f40ea;
+    --brand-light:#335ff5;
+    --ink:#0f172a;
+    --slate:#475569;
+    --muted:#94a3b8;
+    --line:#e2e8f0;
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --emerald:#059669;
+    --amber:#d97706;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--ink);
+    color:var(--ink);
+    overflow:hidden;
+  }
+  code,.mono{font-family:'JetBrains Mono','SF Mono',monospace;}
+
+  /* ---------- Deck ---------- */
+  .deck{position:relative;width:100vw;height:100vh;}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:6vh 8vw;
+    background:var(--bg);
+    opacity:0;visibility:hidden;
+    transform:translateY(14px);
+    transition:opacity .35s ease, transform .35s ease, visibility .35s;
+    overflow-y:auto;
+  }
+  .slide.active{opacity:1;visibility:visible;transform:none;}
+
+  /* ---------- Chrome ---------- */
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--brand);z-index:20;transition:width .35s ease;}
+  .counter{
+    position:fixed;bottom:18px;right:24px;z-index:20;
+    font-size:12px;font-weight:600;color:var(--muted);
+    background:rgba(255,255,255,.85);padding:4px 10px;border-radius:999px;
+    border:1px solid var(--line);
+  }
+  .hint{
+    position:fixed;bottom:18px;left:24px;z-index:20;
+    font-size:12px;color:var(--muted);
+  }
+
+  /* ---------- Typography ---------- */
+  .kicker{
+    display:inline-block;font-size:13px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--brand);margin-bottom:18px;
+  }
+  h1{font-size:clamp(2.4rem,6vw,4rem);line-height:1.05;letter-spacing:-.03em;font-weight:800;}
+  h2{font-size:clamp(1.6rem,3.6vw,2.5rem);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin-bottom:8px;}
+  .sub{font-size:clamp(1rem,2vw,1.3rem);color:var(--slate);margin-top:18px;max-width:60ch;}
+  .slide p{color:var(--slate);font-size:1.05rem;line-height:1.6;}
+  strong{color:var(--ink);font-weight:700;}
+
+  ul{list-style:none;margin-top:20px;display:grid;gap:12px;}
+  ul li{
+    position:relative;padding-left:30px;font-size:1.1rem;color:var(--slate);line-height:1.5;
+  }
+  ul li::before{
+    content:'';position:absolute;left:6px;top:.6em;width:8px;height:8px;
+    border-radius:2px;background:var(--brand);
+  }
+  ul li strong{color:var(--ink);}
+
+  /* ---------- Bits ---------- */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;}
+  .chip{
+    font-size:.85rem;font-weight:600;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);
+    padding:8px 14px;border-radius:999px;
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:22px;box-shadow:0 1px 3px rgba(15,23,42,.05);
+  }
+  .card h3{font-size:1.05rem;font-weight:700;margin-bottom:10px;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .card p{font-size:.95rem;}
+  .card ul{margin-top:10px;gap:7px;}
+  .card ul li{font-size:.92rem;padding-left:22px;}
+  .card ul li::before{width:6px;height:6px;top:.55em;left:4px;}
+
+  .flow{display:flex;align-items:stretch;gap:12px;margin-top:34px;flex-wrap:wrap;}
+  .flow .step{
+    flex:1;min-width:130px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:18px 16px;text-align:center;
+  }
+  .flow .step .n{
+    display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;
+    background:var(--brand);color:#fff;font-weight:700;font-size:.9rem;margin-bottom:10px;
+  }
+  .flow .step h4{font-size:.98rem;color:var(--ink);margin-bottom:4px;}
+  .flow .step p{font-size:.82rem;}
+  .flow .arrow{align-self:center;color:var(--muted);font-size:1.3rem;}
+
+  .arch{display:flex;align-items:center;justify-content:center;gap:0;margin-top:36px;flex-wrap:wrap;}
+  .arch .box{
+    background:var(--card);border:2px solid var(--line);border-radius:14px;
+    padding:18px 22px;text-align:center;min-width:150px;
+  }
+  .arch .box b{display:block;color:var(--ink);font-size:1rem;}
+  .arch .box span{font-size:.82rem;color:var(--muted);}
+  .arch .link{width:44px;height:2px;background:var(--muted);position:relative;}
+  .arch .link::after{content:'▶';position:absolute;right:-4px;top:-9px;color:var(--muted);font-size:.7rem;}
+
+  table.model{width:100%;border-collapse:collapse;margin-top:24px;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line);}
+  table.model th,table.model td{text-align:left;padding:12px 16px;font-size:.92rem;border-bottom:1px solid var(--line);}
+  table.model th{background:#f1f5f9;font-weight:700;color:var(--ink);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;}
+  table.model td{color:var(--slate);}
+  table.model td:first-child{font-weight:700;color:var(--ink);font-family:'JetBrains Mono',monospace;}
+  table.model tr:last-child td{border-bottom:0;}
+
+  .metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px;}
+  .metric{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;}
+  .metric .v{font-size:1.8rem;font-weight:800;color:var(--brand);}
+  .metric .l{font-size:.82rem;color:var(--muted);margin-top:4px;}
+
+  pre{
+    background:#0f172a;color:#e2e8f0;border-radius:14px;padding:22px 24px;margin-top:24px;
+    font-family:'JetBrains Mono',monospace;font-size:.9rem;line-height:1.7;overflow-x:auto;
+  }
+  pre .c{color:#64748b;}
+  pre .g{color:#4ade80;}
+
+  .title-slide{background:linear-gradient(140deg,#1f40ea,#335ff5 55%,#5b7cff);color:#fff;}
+  .title-slide .kicker{color:#c7d2fe;}
+  .title-slide h1{color:#fff;}
+  .title-slide .sub{color:rgba(255,255,255,.9);}
+  .title-slide .chip{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff;}
+  .logo{
+    display:grid;place-items:center;width:64px;height:64px;border-radius:16px;
+    background:rgba(255,255,255,.16);font-size:2rem;font-weight:800;margin-bottom:26px;
+  }
+  .end-slide{background:var(--ink);color:#fff;}
+  .end-slide h2{color:#fff;}
+  .end-slide p{color:rgba(255,255,255,.75);}
+  .end-slide a{color:#93c5fd;font-weight:600;}
+
+  @media (max-width:720px){
+    .grid2,.grid3,.metric-row{grid-template-columns:1fr;}
+    .arch .link{transform:rotate(90deg);}
+  }
+
+  /* ---------- Print / PDF: one slide per page ---------- */
+  @media print{
+    @page{size:1280px 720px;margin:0;}
+    body{overflow:visible;background:#fff;}
+    .deck{height:auto;}
+    .progress,.counter,.hint{display:none;}
+    .slide{
+      position:relative;inset:auto;opacity:1;visibility:visible;transform:none;
+      width:1280px;height:720px;page-break-after:always;break-after:page;
+      overflow:hidden;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 1 -->
+  <section class="slide active title-slide">
+    <div class="logo">C</div>
+    <span class="kicker">Project Presentation</span>
+    <h1>CallFlow</h1>
+    <p class="sub">A Sales Call Management System — assign leads, run calls, log outcomes, and watch every call roll up into live sales dashboards and targets.</p>
+    <div class="chips">
+      <span class="chip">PostgreSQL</span>
+      <span class="chip">Express</span>
+      <span class="chip">React</span>
+      <span class="chip">Node.js</span>
+      <span class="chip">Prisma ORM</span>
+      <span class="chip">JWT Auth</span>
+      <span class="chip">Tailwind CSS</span>
+      <span class="chip">Recharts</span>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <span class="kicker">The Problem</span>
+    <h2>Sales call teams run blind</h2>
+    <ul>
+      <li>Leads are tracked in <strong>spreadsheets and notebooks</strong> — calls get missed, follow-ups slip.</li>
+      <li>Managers have <strong>no live view</strong> of who is calling, what is converting, or who is behind target.</li>
+      <li>Assigning customers to agents is <strong>manual and messy</strong>; nobody owns the lead.</li>
+      <li>Monthly targets are guessed at, not measured.</li>
+    </ul>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <span class="kicker">The Solution</span>
+    <h2>One loop, fully tracked</h2>
+    <p>CallFlow turns the whole sales-call cycle into a single, auditable workflow.</p>
+    <div class="flow">
+      <div class="step"><span class="n">1</span><h4>Admin assigns</h4><p>Customer → an agent</p></div>
+      <span class="arrow">→</span>
+      <div class="step"><span class="n">2</span><h4>Agent calls</h4><p>From the Call Console</p></div>
+      <span class="arrow">→</span>
+      <div class="step"><span class="n">3</span><h4>Logs outcome</h4><p>Interested · Callback · Sale…</p></div>
+      <span class="arrow">→</span>
+      <div class="step"><span class="n">4</span><h4>Data rolls up</h4><p>Dashboards &amp; targets</p></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <span class="kicker">Tech Stack</span>
+    <h2>PERN + Prisma</h2>
+    <div class="grid3">
+      <div class="card">
+        <h3>🖥️ Frontend</h3>
+        <ul>
+          <li>React + Vite</li>
+          <li>Tailwind CSS</li>
+          <li>React Router</li>
+          <li>Recharts (charts)</li>
+          <li>Axios API client</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>⚙️ Backend</h3>
+        <ul>
+          <li>Node.js + Express</li>
+          <li>Prisma ORM</li>
+          <li>Zod validation</li>
+          <li>REST API under <code>/api</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🗄️ Data &amp; Auth</h3>
+        <ul>
+          <li>PostgreSQL</li>
+          <li>JWT (Bearer tokens)</li>
+          <li>bcrypt password hashing</li>
+          <li>Role-based access</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <span class="kicker">Architecture</span>
+    <h2>How a request flows</h2>
+    <div class="arch">
+      <div class="box"><b>React SPA</b><span>browser · :5173</span></div>
+      <div class="link"></div>
+      <div class="box"><b>Express API</b><span>REST · :5000</span></div>
+      <div class="link"></div>
+      <div class="box"><b>Prisma ORM</b><span>query layer</span></div>
+      <div class="link"></div>
+      <div class="box"><b>PostgreSQL</b><span>relational store</span></div>
+    </div>
+    <ul>
+      <li>Vite dev server <strong>proxies <code>/api</code></strong> to Express — no CORS pain in dev.</li>
+      <li>Every protected route runs <strong>authenticate → requireRole</strong> middleware before the controller.</li>
+      <li>Agents' queries are <strong>automatically scoped</strong> to their own customers and calls.</li>
+    </ul>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <span class="kicker">Data Model</span>
+    <h2>Three tables do the work</h2>
+    <table class="model">
+      <thead><tr><th>Table</th><th>Key fields</th><th>Relations</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>User</td>
+          <td>name, email, passwordHash, role (ADMIN/AGENT), phone, monthlyTarget</td>
+          <td>has many Customers, has many Calls</td>
+        </tr>
+        <tr>
+          <td>Customer</td>
+          <td>name, phone, email, city, status, notes, lastCallAt, nextFollowUpAt</td>
+          <td>belongs to an agent (User), has many Calls</td>
+        </tr>
+        <tr>
+          <td>Call</td>
+          <td>status, notes, saleAmount, followUpAt, createdAt</td>
+          <td>belongs to Customer + Agent</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:18px">Logging a call is one transaction: it inserts a <code>Call</code> <em>and</em> advances the customer's <code>status</code> + <code>lastCallAt</code>.</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <span class="kicker">Access Control</span>
+    <h2>Two roles, clear boundaries</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>👑 Admin</h3>
+        <ul>
+          <li>Full team dashboard &amp; reports</li>
+          <li>Create / edit / delete agents</li>
+          <li>All customers — add, edit, delete, re-assign</li>
+          <li>Company-wide call log</li>
+          <li>Set monthly targets</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎧 Agent</h3>
+        <ul>
+          <li>Personal dashboard &amp; target progress</li>
+          <li>Only <strong>their</strong> assigned customers</li>
+          <li>Add customers (auto-assigned to self)</li>
+          <li>Call Console — log every outcome</li>
+          <li>No access to other agents' data</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <span class="kicker">Feature Tour — Admin</span>
+    <h2>Run the whole floor</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>📊 Dashboard</h3>
+        <p>Total calls, total sales, active agents, team target %, a 30-day sales chart, top agents this month, and the latest calls.</p>
+      </div>
+      <div class="card">
+        <h3>👥 Agents</h3>
+        <p>Add / edit / delete. Per-agent monthly calls, sales and target progress. Drill into an agent for their chart + full call history.</p>
+      </div>
+      <div class="card">
+        <h3>📋 Customers</h3>
+        <p>Search &amp; filter by status or agent. Inline re-assignment. Add / edit / delete. Last call and next follow-up at a glance.</p>
+      </div>
+      <div class="card">
+        <h3>📞 Call Log</h3>
+        <p>Every call across the team, filterable by agent and outcome, with notes and sale amounts.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <span class="kicker">Feature Tour — Agent</span>
+    <h2>Everything for the next call</h2>
+    <div class="grid3">
+      <div class="card">
+        <h3>📊 My Dashboard</h3>
+        <p>Calls today &amp; this month, sales this month, a live target progress bar, and upcoming follow-ups.</p>
+      </div>
+      <div class="card">
+        <h3>📋 My Customers</h3>
+        <p>Only the leads assigned to me. Search, filter, and add new customers on the fly.</p>
+      </div>
+      <div class="card">
+        <h3>📞 Call Console</h3>
+        <p>Pick a customer, hit the <code>tel:</code> dial link, and log the result without leaving the screen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <span class="kicker">Highlight</span>
+    <h2>The Call Console</h2>
+    <div class="grid2">
+      <div>
+        <ul>
+          <li>Searchable customer list on the left, live customer card on the right.</li>
+          <li>One-tap outcome: <strong>Interested · Callback · No Answer · Not Interested · Sale</strong>.</li>
+          <li>Choosing <strong>Sale</strong> reveals a required amount field.</li>
+          <li>Optional <strong>follow-up date</strong> + free-text notes.</li>
+          <li>On save: the call is stored and the customer's status &amp; last-call time move forward automatically.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎯 Why it matters</h3>
+        <p>The agent never touches a spreadsheet. Every dial becomes structured data the moment it happens — which is exactly what the dashboards and targets are built on.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <span class="kicker">Security</span>
+    <h2>Built in, not bolted on</h2>
+    <ul>
+      <li><strong>bcrypt</strong> hashes every password — plain text is never stored.</li>
+      <li><strong>JWT bearer tokens</strong> signed with a server secret; short-lived and verified on every request.</li>
+      <li><strong>Role middleware</strong> (<code>requireRole('ADMIN')</code>) guards admin-only routes.</li>
+      <li><strong>Ownership checks</strong> — an agent physically cannot read or edit another agent's customers.</li>
+      <li><strong>Zod validation</strong> on every write; bad input is rejected with a clear 400.</li>
+      <li>Secrets live in <code>.env</code> — <strong>git-ignored</strong>, never committed.</li>
+    </ul>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <span class="kicker">Reporting</span>
+    <h2>Numbers that update themselves</h2>
+    <div class="metric-row">
+      <div class="metric"><div class="v">30d</div><div class="l">Rolling sales &amp; call series</div></div>
+      <div class="metric"><div class="v">Top 5</div><div class="l">Agent leaderboard (month)</div></div>
+      <div class="metric"><div class="v">%</div><div class="l">Target attainment per agent</div></div>
+      <div class="metric"><div class="v">6</div><div class="l">Customer status buckets</div></div>
+    </div>
+    <p style="margin-top:24px">All computed server-side with Prisma aggregates and a couple of grouped SQL queries — the client just renders what the dashboard endpoint returns.</p>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <span class="kicker">Run It</span>
+    <h2>From clone to login</h2>
+    <pre><span class="c"># 1 — Backend</span>
+cd server
+npm install
+cp .env.example .env            <span class="c"># set DATABASE_URL + JWT_SECRET</span>
+npx prisma migrate dev          <span class="c"># create tables</span>
+npm run db:seed                 <span class="c"># admin + 4 agents + demo data</span>
+npm run dev                     <span class="g"># API → :5000</span>
+
+<span class="c"># 2 — Frontend</span>
+cd client
+npm install
+npm run dev                     <span class="g"># app → :5173</span></pre>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <span class="kicker">Roadmap</span>
+    <h2>What comes next</h2>
+    <ul>
+      <li><strong>Twilio Voice</strong> — dial customers straight from the browser, record calls.</li>
+      <li><strong>Socket.IO</strong> — push live updates to the admin dashboard as calls land.</li>
+      <li><strong>CSV import / export</strong> for bulk customer lists.</li>
+      <li><strong>Activity / audit trail</strong> on every assignment and status change.</li>
+      <li>Deploy: Vercel (client) + Render/Railway (API + Postgres).</li>
+    </ul>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide end-slide">
+    <span class="kicker">Thank You</span>
+    <h2>CallFlow</h2>
+    <p>Sales Call Management System — PostgreSQL · Express · React · Node · Prisma</p>
+    <p style="margin-top:20px">Source code &amp; setup guide:<br>
+      <a href="https://github.com/zaminaliabro/callflow">github.com/zaminaliabro/callflow</a>
+    </p>
+  </section>
+
+</div>
+
+<div class="counter" id="counter">1 / 15</div>
+<div class="hint">← → or Space to navigate · F for fullscreen</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'))
+  const progress = document.getElementById('progress')
+  const counter = document.getElementById('counter')
+  let i = 0
+
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n))
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i))
+    progress.style.width = ((i + 1) / slides.length) * 100 + '%'
+    counter.textContent = `${i + 1} / ${slides.length}`
+    location.hash = i + 1
+  }
+
+  function next() { show(i + 1) }
+  function prev() { show(i - 1) }
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next() }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev() }
+    else if (e.key === 'Home') show(0)
+    else if (e.key === 'End') show(slides.length - 1)
+    else if (e.key.toLowerCase() === 'f') {
+      document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()
+    }
+  })
+
+  document.getElementById('deck').addEventListener('click', (e) => {
+    if (e.target.closest('a')) return
+    const midpoint = window.innerWidth / 2
+    e.clientX > midpoint ? next() : prev()
+  })
+
+  const start = parseInt(location.hash.slice(1), 10)
+  show(Number.isFinite(start) && start > 0 ? start - 1 : 0)
+</script>
+</body>
+</html>
