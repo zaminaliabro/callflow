@@ -21,7 +21,7 @@ export default function Login() {
     setBusy(true)
     setError(null)
     try {
-      const u = await login(email.trim(), password)
+      const u = await login(email.trim(), password.trim())
       const dest = location.state?.from?.pathname
       navigate(dest || (u.role === 'ADMIN' ? '/admin' : '/agent'), { replace: true })
     } catch (err) {

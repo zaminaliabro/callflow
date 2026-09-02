@@ -6,7 +6,7 @@ import { parseBody, unauthorized } from '../utils/http.js'
 
 const loginSchema = z.object({
   email: z.string().trim().email(),
-  password: z.string().min(1),
+  password: z.string().trim().min(1),
 })
 
 function publicUser(user) {
@@ -32,8 +32,8 @@ export async function me(req, res) {
 }
 
 const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1),
-  newPassword: z.string().min(6),
+  currentPassword: z.string().trim().min(1),
+  newPassword: z.string().trim().min(6),
 })
 
 export async function changePassword(req, res) {
