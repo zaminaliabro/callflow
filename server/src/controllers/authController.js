@@ -18,10 +18,11 @@ export async function login(req, res) {
   const { email, password } = parseBody(loginSchema, req.body)
 
   const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
-  if (!user || !user.isActive) throw unauthorized('Invalid credentials')
+  if (!user) throw unauthorized('No account found with that email')
+  if (!user.isActive) throw unauthorized('This account has been disabled')
 
   const ok = await bcrypt.compare(password, user.passwordHash)
-  if (!ok) throw unauthorized('Invalid credentials')
+  if (!ok) throw unauthorized('Incorrect password')
 
   const token = signToken({ sub: user.id, role: user.role })
   res.json({ token, user: publicUser(user) })
