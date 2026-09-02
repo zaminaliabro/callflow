@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { apiError } from '../api/client.js'
-import { Field, TextInput } from '../components/Field.jsx'
+import { Field, TextInput, PasswordInput } from '../components/Field.jsx'
 import ThemeToggle from '../components/ThemeToggle.jsx'
 
 export default function Login() {
@@ -56,15 +56,16 @@ export default function Login() {
             <TextInput
               type="email"
               autoComplete="username"
+              placeholder="you@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </Field>
           <Field label="Password">
-            <TextInput
-              type="password"
+            <PasswordInput
               autoComplete="current-password"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

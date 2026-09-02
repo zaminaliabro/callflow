@@ -195,6 +195,7 @@ export default function CallConsolePage() {
                     <TextInput
                       type="number"
                       min="1"
+                      placeholder="e.g. 50000"
                       value={form.saleAmount}
                       onChange={(e) => setForm({ ...form, saleAmount: e.target.value })}
                       required

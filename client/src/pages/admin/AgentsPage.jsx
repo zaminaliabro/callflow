@@ -5,7 +5,7 @@ import { useFetch } from '../../lib/useFetch.js'
 import { money, number } from '../../lib/format.js'
 import Spinner from '../../components/Spinner.jsx'
 import Modal from '../../components/Modal.jsx'
-import { Field, TextInput } from '../../components/Field.jsx'
+import { Field, TextInput, PasswordInput } from '../../components/Field.jsx'
 import PageHeader from '../PageHeader.jsx'
 
 const EMPTY = { name: '', email: '', phone: '', monthlyTarget: '', password: '' }
@@ -171,6 +171,7 @@ export default function AgentsPage() {
           {formError && <div className="alert-error">{formError}</div>}
           <Field label="Full name">
             <TextInput
+              placeholder="e.g. Hamza Tariq"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
@@ -179,6 +180,7 @@ export default function AgentsPage() {
           <Field label="Email">
             <TextInput
               type="email"
+              placeholder="agent@company.com"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
@@ -187,6 +189,7 @@ export default function AgentsPage() {
           <div className="grid grid-cols-2 gap-3">
             <Field label="Phone">
               <TextInput
+                placeholder="03xx-xxxxxxx"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
               />
@@ -195,14 +198,15 @@ export default function AgentsPage() {
               <TextInput
                 type="number"
                 min="0"
+                placeholder="e.g. 300000"
                 value={form.monthlyTarget}
                 onChange={(e) => setForm({ ...form, monthlyTarget: e.target.value })}
               />
             </Field>
           </div>
           <Field label={modal?.mode === 'create' ? 'Password' : 'New password (leave blank to keep)'}>
-            <TextInput
-              type="text"
+            <PasswordInput
+              placeholder={modal?.mode === 'create' ? 'Min 6 characters' : 'Leave blank to keep current'}
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               required={modal?.mode === 'create'}

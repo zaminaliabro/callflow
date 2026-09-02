@@ -168,6 +168,7 @@ export default function MyCustomersPage() {
           <div className="grid grid-cols-2 gap-3">
             <Field label="Name">
               <TextInput
+                placeholder="Customer full name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
@@ -175,6 +176,7 @@ export default function MyCustomersPage() {
             </Field>
             <Field label="Phone">
               <TextInput
+                placeholder="03xx-xxxxxxx"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 required
@@ -183,12 +185,14 @@ export default function MyCustomersPage() {
             <Field label="Email">
               <TextInput
                 type="email"
+                placeholder="customer@example.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </Field>
             <Field label="City">
               <TextInput
+                placeholder="e.g. Karachi"
                 value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
               />
@@ -203,6 +207,7 @@ export default function MyCustomersPage() {
           </div>
           <Field label="Notes">
             <TextArea
+              placeholder="Any context about this lead…"
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
