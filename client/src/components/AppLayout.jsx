@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import ThemeToggle from './ThemeToggle.jsx'
 
 const NAV = {
   ADMIN: [
@@ -31,7 +32,7 @@ export default function AppLayout() {
     <div className="min-h-screen lg:flex">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-slate-900 text-slate-300 transition-transform lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-slate-800 bg-slate-900 text-slate-300 transition-transform dark:border-slate-800 dark:bg-slate-950 lg:static lg:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -48,7 +49,9 @@ export default function AppLayout() {
               onClick={() => setOpen(false)}
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition ${
-                  isActive ? 'bg-brand-600 text-white' : 'hover:bg-slate-800 hover:text-white'
+                  isActive
+                    ? 'bg-brand-600 text-white'
+                    : 'hover:bg-slate-800 hover:text-white dark:hover:bg-slate-800'
                 }`
               }
             >
@@ -70,22 +73,23 @@ export default function AppLayout() {
 
       {/* Main */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-8">
+        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-900 lg:px-8">
           <button
-            className="rounded-md p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
+            className="rounded-md p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden"
             onClick={() => setOpen(true)}
             aria-label="Open menu"
           >
             ☰
           </button>
           <div className="flex flex-1 items-center justify-end gap-3">
-            <div className="text-right">
-              <p className="text-sm font-semibold text-slate-800">{user.name}</p>
-              <p className="text-xs text-slate-500">{user.email}</p>
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{user.name}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
             </div>
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-brand-100 text-sm font-bold text-brand-700">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-brand-100 text-sm font-bold text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
               {user.name.charAt(0).toUpperCase()}
             </span>
+            <ThemeToggle />
             <button className="btn-ghost btn-sm" onClick={onLogout}>
               Logout
             </button>

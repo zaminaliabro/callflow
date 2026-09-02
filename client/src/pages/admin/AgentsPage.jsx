@@ -71,7 +71,7 @@ export default function AgentsPage() {
   }
 
   if (loading) return <Spinner />
-  if (error) return <p className="text-sm text-rose-600">{error}</p>
+  if (error) return <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
 
   return (
     <>
@@ -86,8 +86,8 @@ export default function AgentsPage() {
       />
 
       <div className="card overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200">
-          <thead className="bg-slate-50">
+        <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+          <thead className="thead">
             <tr>
               <th className="th">Agent</th>
               <th className="th">Customers</th>
@@ -97,31 +97,36 @@ export default function AgentsPage() {
               <th className="th text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {agents.map((a) => (
-              <tr key={a.id} className="hover:bg-slate-50">
+              <tr key={a.id} className="row-hover">
                 <td className="td">
-                  <Link to={`/admin/agents/${a.id}`} className="font-medium hover:text-brand-600">
+                  <Link
+                    to={`/admin/agents/${a.id}`}
+                    className="font-medium hover:text-brand-600 dark:hover:text-brand-400"
+                  >
                     {a.name}
                   </Link>
-                  <div className="text-xs text-slate-400">{a.email}</div>
+                  <div className="text-xs text-slate-400 dark:text-slate-500">{a.email}</div>
                 </td>
                 <td className="td">{number(a.customers)}</td>
                 <td className="td">{number(a.monthCalls)}</td>
-                <td className="td font-medium text-emerald-600">{money(a.monthSales)}</td>
+                <td className="td font-medium text-emerald-600 dark:text-emerald-400">
+                  {money(a.monthSales)}
+                </td>
                 <td className="td">
                   {a.monthlyTarget > 0 ? (
                     <div className="flex items-center gap-2">
-                      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-slate-200">
+                      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
                         <div
                           className="h-full rounded-full bg-brand-500"
                           style={{ width: `${Math.min(a.targetPct || 0, 100)}%` }}
                         />
                       </div>
-                      <span className="text-xs text-slate-500">{a.targetPct}%</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">{a.targetPct}%</span>
                     </div>
                   ) : (
-                    <span className="text-xs text-slate-400">Not set</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">Not set</span>
                   )}
                 </td>
                 <td className="td">
@@ -138,7 +143,7 @@ export default function AgentsPage() {
             ))}
             {agents.length === 0 && (
               <tr>
-                <td className="td text-slate-500" colSpan={6}>
+                <td className="td text-slate-500 dark:text-slate-400" colSpan={6}>
                   No agents yet — add your first one.
                 </td>
               </tr>
@@ -163,9 +168,7 @@ export default function AgentsPage() {
         }
       >
         <form id="agent-form" onSubmit={save} className="space-y-3">
-          {formError && (
-            <div className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{formError}</div>
-          )}
+          {formError && <div className="alert-error">{formError}</div>}
           <Field label="Full name">
             <TextInput
               value={form.name}
@@ -197,9 +200,7 @@ export default function AgentsPage() {
               />
             </Field>
           </div>
-          <Field
-            label={modal?.mode === 'create' ? 'Password' : 'New password (leave blank to keep)'}
-          >
+          <Field label={modal?.mode === 'create' ? 'Password' : 'New password (leave blank to keep)'}>
             <TextInput
               type="text"
               value={form.password}

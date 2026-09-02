@@ -78,7 +78,7 @@ export default function CallConsolePage() {
       <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
         {/* Customer picker */}
         <div className="card flex max-h-[70vh] flex-col overflow-hidden">
-          <div className="border-b border-slate-200 p-3">
+          <div className="border-b border-slate-200 p-3 dark:border-slate-800">
             <input
               className="input"
               placeholder="Search customers…"
@@ -94,27 +94,29 @@ export default function CallConsolePage() {
                 <button
                   key={c.id}
                   onClick={() => select(c.id)}
-                  className={`flex w-full items-center justify-between gap-2 border-b border-slate-100 px-4 py-3 text-left hover:bg-slate-50 ${
-                    c.id === selectedId ? 'bg-brand-50' : ''
+                  className={`flex w-full items-center justify-between gap-2 border-b border-slate-100 px-4 py-3 text-left hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 ${
+                    c.id === selectedId ? 'bg-brand-50 dark:bg-brand-500/15' : ''
                   }`}
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-slate-800">{c.name}</p>
-                    <p className="text-xs text-slate-400">{c.phone}</p>
+                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-200">
+                      {c.name}
+                    </p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">{c.phone}</p>
                   </div>
                   <StatusBadge status={c.status} />
                 </button>
               ))
             )}
             {!listLoading && rows.length === 0 && (
-              <p className="p-4 text-sm text-slate-500">No customers found.</p>
+              <p className="p-4 text-sm text-slate-500 dark:text-slate-400">No customers found.</p>
             )}
           </div>
         </div>
 
         {/* Call panel */}
         {!selectedId ? (
-          <div className="card grid place-items-center p-10 text-center text-slate-500">
+          <div className="card grid place-items-center p-10 text-center text-slate-500 dark:text-slate-400">
             <p>Select a customer from the list to start.</p>
           </div>
         ) : custLoading ? (
@@ -122,21 +124,27 @@ export default function CallConsolePage() {
             <Spinner />
           </div>
         ) : !customer ? (
-          <div className="card p-6 text-sm text-rose-600">Could not load this customer.</div>
+          <div className="card p-6 text-sm text-rose-600 dark:text-rose-400">
+            Could not load this customer.
+          </div>
         ) : (
           <div className="space-y-4">
             <div className="card p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">{customer.name}</h2>
-                  <p className="text-sm text-slate-500">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                    {customer.name}
+                  </h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     {customer.phone}
                     {customer.city ? ` · ${customer.city}` : ''}
                     {customer.email ? ` · ${customer.email}` : ''}
                   </p>
-                  <div className="mt-2 flex items-center gap-3 text-xs text-slate-500">
+                  <div className="mt-2 flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
                     <StatusBadge status={customer.status} />
-                    <span>Last call: {customer.lastCallAt ? dateTime(customer.lastCallAt) : '—'}</span>
+                    <span>
+                      Last call: {customer.lastCallAt ? dateTime(customer.lastCallAt) : '—'}
+                    </span>
                     <span>Follow-up: {dateOnly(customer.nextFollowUpAt)}</span>
                   </div>
                 </div>
@@ -147,22 +155,16 @@ export default function CallConsolePage() {
                 )}
               </div>
               {customer.notes && (
-                <p className="mt-3 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
+                <p className="mt-3 rounded-lg bg-slate-50 p-3 text-sm text-slate-600 dark:bg-slate-800/50 dark:text-slate-300">
                   {customer.notes}
                 </p>
               )}
             </div>
 
             <form onSubmit={submit} className="card space-y-4 p-5">
-              <h3 className="font-semibold text-slate-900">Log call outcome</h3>
-              {error && (
-                <div className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</div>
-              )}
-              {flash && (
-                <div className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-                  {flash}
-                </div>
-              )}
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">Log call outcome</h3>
+              {error && <div className="alert-error">{error}</div>}
+              {flash && <div className="alert-success">{flash}</div>}
 
               <div className="flex flex-wrap gap-2">
                 {CALL_STATUSES.map((s) => (
@@ -170,8 +172,8 @@ export default function CallConsolePage() {
                     key={s.value}
                     className={`cursor-pointer rounded-lg border px-3 py-2 text-sm font-medium ${
                       form.status === s.value
-                        ? 'border-brand-500 bg-brand-50 text-brand-700'
-                        : 'border-slate-300 text-slate-600 hover:bg-slate-50'
+                        ? 'border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300'
+                        : 'border-slate-300 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
                     }`}
                   >
                     <input
@@ -222,28 +224,32 @@ export default function CallConsolePage() {
             </form>
 
             <div className="card">
-              <div className="border-b border-slate-200 px-5 py-3">
-                <h3 className="font-semibold text-slate-900">Call history</h3>
+              <div className="border-b border-slate-200 px-5 py-3 dark:border-slate-800">
+                <h3 className="font-semibold text-slate-900 dark:text-slate-100">Call history</h3>
               </div>
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                 {customer.calls.map((c) => (
                   <li key={c.id} className="flex items-start justify-between gap-3 px-5 py-3">
                     <div>
                       <StatusBadge status={c.status} />
-                      {c.notes && <p className="mt-1 text-sm text-slate-600">{c.notes}</p>}
-                      <p className="mt-0.5 text-xs text-slate-400">
+                      {c.notes && (
+                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{c.notes}</p>
+                      )}
+                      <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
                         {c.agent?.name} · {dateTime(c.createdAt)}
                       </p>
                     </div>
                     {c.saleAmount > 0 && (
-                      <span className="whitespace-nowrap text-sm font-semibold text-emerald-600">
+                      <span className="whitespace-nowrap text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                         {money(c.saleAmount)}
                       </span>
                     )}
                   </li>
                 ))}
                 {customer.calls.length === 0 && (
-                  <li className="px-5 py-4 text-sm text-slate-500">No calls logged yet.</li>
+                  <li className="px-5 py-4 text-sm text-slate-500 dark:text-slate-400">
+                    No calls logged yet.
+                  </li>
                 )}
               </ul>
             </div>

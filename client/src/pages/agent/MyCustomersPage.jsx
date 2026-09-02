@@ -85,12 +85,12 @@ export default function MyCustomersPage() {
       {loading ? (
         <Spinner />
       ) : error ? (
-        <p className="text-sm text-rose-600">{error}</p>
+        <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
       ) : (
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+              <thead className="thead">
                 <tr>
                   <th className="th">Customer</th>
                   <th className="th">City</th>
@@ -100,26 +100,28 @@ export default function MyCustomersPage() {
                   <th className="th text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {data.rows.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50">
+                  <tr key={c.id} className="row-hover">
                     <td className="td">
                       <Link
                         to={`/agent/customers/${c.id}`}
-                        className="font-medium hover:text-brand-600"
+                        className="font-medium hover:text-brand-600 dark:hover:text-brand-400"
                       >
                         {c.name}
                       </Link>
-                      <div className="text-xs text-slate-400">{c.phone}</div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500">{c.phone}</div>
                     </td>
                     <td className="td">{c.city || '—'}</td>
                     <td className="td">
                       <StatusBadge status={c.status} />
                     </td>
-                    <td className="td text-slate-500">
+                    <td className="td text-slate-500 dark:text-slate-400">
                       {c.lastCallAt ? fromNow(c.lastCallAt) : '—'}
                     </td>
-                    <td className="td text-slate-500">{dateOnly(c.nextFollowUpAt)}</td>
+                    <td className="td text-slate-500 dark:text-slate-400">
+                      {dateOnly(c.nextFollowUpAt)}
+                    </td>
                     <td className="td text-right">
                       <Link to={`/agent/call?customer=${c.id}`} className="btn-primary btn-sm">
                         Call
@@ -129,7 +131,7 @@ export default function MyCustomersPage() {
                 ))}
                 {data.rows.length === 0 && (
                   <tr>
-                    <td className="td text-slate-500" colSpan={6}>
+                    <td className="td text-slate-500 dark:text-slate-400" colSpan={6}>
                       No customers yet.
                     </td>
                   </tr>
@@ -162,9 +164,7 @@ export default function MyCustomersPage() {
         }
       >
         <form id="my-customer-form" onSubmit={save} className="space-y-3">
-          {formError && (
-            <div className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{formError}</div>
-          )}
+          {formError && <div className="alert-error">{formError}</div>}
           <div className="grid grid-cols-2 gap-3">
             <Field label="Name">
               <TextInput

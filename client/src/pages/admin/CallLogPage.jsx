@@ -56,12 +56,12 @@ export default function CallLogPage() {
       {loading ? (
         <Spinner />
       ) : error ? (
-        <p className="text-sm text-rose-600">{error}</p>
+        <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
       ) : (
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+              <thead className="thead">
                 <tr>
                   <th className="th">Customer</th>
                   <th className="th">Agent</th>
@@ -71,30 +71,34 @@ export default function CallLogPage() {
                   <th className="th">When</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {data.rows.map((c) => (
                   <tr key={c.id}>
                     <td className="td">
                       <Link
                         to={`/admin/customers/${c.customer.id}`}
-                        className="font-medium hover:text-brand-600"
+                        className="font-medium hover:text-brand-600 dark:hover:text-brand-400"
                       >
                         {c.customer.name}
                       </Link>
-                      <div className="text-xs text-slate-400">{c.customer.phone}</div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500">
+                        {c.customer.phone}
+                      </div>
                     </td>
                     <td className="td">{c.agent?.name || '—'}</td>
                     <td className="td">
                       <StatusBadge status={c.status} />
                     </td>
                     <td className="td">{c.saleAmount ? money(c.saleAmount) : '—'}</td>
-                    <td className="td max-w-xs truncate text-slate-500">{c.notes || '—'}</td>
-                    <td className="td text-slate-500">{dateTime(c.createdAt)}</td>
+                    <td className="td max-w-xs truncate text-slate-500 dark:text-slate-400">
+                      {c.notes || '—'}
+                    </td>
+                    <td className="td text-slate-500 dark:text-slate-400">{dateTime(c.createdAt)}</td>
                   </tr>
                 ))}
                 {data.rows.length === 0 && (
                   <tr>
-                    <td className="td text-slate-500" colSpan={6}>
+                    <td className="td text-slate-500 dark:text-slate-400" colSpan={6}>
                       No calls match these filters.
                     </td>
                   </tr>

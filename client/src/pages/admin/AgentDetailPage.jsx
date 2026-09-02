@@ -12,7 +12,7 @@ export default function AgentDetailPage() {
   const { data, loading, error } = useFetch(`/agents/${id}`)
 
   if (loading) return <Spinner />
-  if (error) return <p className="text-sm text-rose-600">{error}</p>
+  if (error) return <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
 
   const { agent, stats, series, recentCalls } = data
 
@@ -48,17 +48,17 @@ export default function AgentDetailPage() {
       </div>
 
       <div className="mt-4 card p-5">
-        <h2 className="mb-3 font-semibold text-slate-900">Sales — last 30 days</h2>
+        <h2 className="mb-3 font-semibold text-slate-900 dark:text-slate-100">Sales — last 30 days</h2>
         <SalesChart data={series} metric="sales" />
       </div>
 
       <div className="mt-4 card">
-        <div className="border-b border-slate-200 px-5 py-4">
-          <h2 className="font-semibold text-slate-900">Call History</h2>
+        <div className="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+          <h2 className="font-semibold text-slate-900 dark:text-slate-100">Call History</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50">
+          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+            <thead className="thead">
               <tr>
                 <th className="th">Customer</th>
                 <th className="th">Outcome</th>
@@ -67,19 +67,23 @@ export default function AgentDetailPage() {
                 <th className="th">When</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {recentCalls.map((c) => (
                 <tr key={c.id}>
                   <td className="td font-medium">{c.customer?.name || '—'}</td>
-                  <td className="td"><StatusBadge status={c.status} /></td>
+                  <td className="td">
+                    <StatusBadge status={c.status} />
+                  </td>
                   <td className="td">{c.saleAmount ? money(c.saleAmount) : '—'}</td>
-                  <td className="td max-w-xs truncate text-slate-500">{c.notes || '—'}</td>
-                  <td className="td text-slate-500">{dateTime(c.createdAt)}</td>
+                  <td className="td max-w-xs truncate text-slate-500 dark:text-slate-400">
+                    {c.notes || '—'}
+                  </td>
+                  <td className="td text-slate-500 dark:text-slate-400">{dateTime(c.createdAt)}</td>
                 </tr>
               ))}
               {recentCalls.length === 0 && (
                 <tr>
-                  <td className="td text-slate-500" colSpan={5}>
+                  <td className="td text-slate-500 dark:text-slate-400" colSpan={5}>
                     No calls logged.
                   </td>
                 </tr>

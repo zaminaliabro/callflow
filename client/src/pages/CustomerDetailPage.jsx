@@ -12,7 +12,7 @@ export default function CustomerDetailPage() {
   const { data: customer, loading, error } = useFetch(`/customers/${id}`)
 
   if (loading) return <Spinner />
-  if (error) return <p className="text-sm text-rose-600">{error}</p>
+  if (error) return <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
 
   const backTo = isAdmin ? '/admin/customers' : '/agent/customers'
 
@@ -47,37 +47,43 @@ export default function CustomerDetailPage() {
           {customer.notes && (
             <div>
               <p className="label">Notes</p>
-              <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">{customer.notes}</p>
+              <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600 dark:bg-slate-800/50 dark:text-slate-300">
+                {customer.notes}
+              </p>
             </div>
           )}
         </div>
 
         <div className="card lg:col-span-2">
-          <div className="border-b border-slate-200 px-5 py-4">
-            <h2 className="font-semibold text-slate-900">
+          <div className="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+            <h2 className="font-semibold text-slate-900 dark:text-slate-100">
               Call History · {customer.calls.length}
             </h2>
           </div>
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-slate-100 dark:divide-slate-800">
             {customer.calls.map((c) => (
               <li key={c.id} className="flex items-start justify-between gap-3 px-5 py-4">
                 <div>
                   <StatusBadge status={c.status} />
-                  {c.notes && <p className="mt-1 text-sm text-slate-600">{c.notes}</p>}
-                  <p className="mt-1 text-xs text-slate-400">
+                  {c.notes && (
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{c.notes}</p>
+                  )}
+                  <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                     {c.agent?.name} · {dateTime(c.createdAt)}
                     {c.followUpAt ? ` · follow-up ${dateOnly(c.followUpAt)}` : ''}
                   </p>
                 </div>
                 {c.saleAmount > 0 && (
-                  <span className="whitespace-nowrap text-sm font-semibold text-emerald-600">
+                  <span className="whitespace-nowrap text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                     {money(c.saleAmount)}
                   </span>
                 )}
               </li>
             ))}
             {customer.calls.length === 0 && (
-              <li className="px-5 py-6 text-sm text-slate-500">No calls logged yet.</li>
+              <li className="px-5 py-6 text-sm text-slate-500 dark:text-slate-400">
+                No calls logged yet.
+              </li>
             )}
           </ul>
         </div>
@@ -89,8 +95,10 @@ export default function CustomerDetailPage() {
 function Row({ label, value }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</span>
-      <span className="text-sm text-slate-700">{value}</span>
+      <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        {label}
+      </span>
+      <span className="text-sm text-slate-700 dark:text-slate-200">{value}</span>
     </div>
   )
 }

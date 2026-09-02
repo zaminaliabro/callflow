@@ -151,12 +151,12 @@ export default function CustomersPage() {
       {loading ? (
         <Spinner />
       ) : error ? (
-        <p className="text-sm text-rose-600">{error}</p>
+        <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
       ) : (
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+              <thead className="thead">
                 <tr>
                   <th className="th">Customer</th>
                   <th className="th">City</th>
@@ -167,17 +167,17 @@ export default function CustomersPage() {
                   <th className="th text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {data.rows.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50">
+                  <tr key={c.id} className="row-hover">
                     <td className="td">
                       <Link
                         to={`/admin/customers/${c.id}`}
-                        className="font-medium hover:text-brand-600"
+                        className="font-medium hover:text-brand-600 dark:hover:text-brand-400"
                       >
                         {c.name}
                       </Link>
-                      <div className="text-xs text-slate-400">{c.phone}</div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500">{c.phone}</div>
                     </td>
                     <td className="td">{c.city || '—'}</td>
                     <td className="td">
@@ -185,7 +185,7 @@ export default function CustomersPage() {
                     </td>
                     <td className="td">
                       <select
-                        className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs"
+                        className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                         value={c.assignedAgentId || ''}
                         onChange={(e) => quickAssign(c, e.target.value)}
                       >
@@ -197,8 +197,12 @@ export default function CustomersPage() {
                         ))}
                       </select>
                     </td>
-                    <td className="td text-slate-500">{c.lastCallAt ? fromNow(c.lastCallAt) : '—'}</td>
-                    <td className="td text-slate-500">{dateOnly(c.nextFollowUpAt)}</td>
+                    <td className="td text-slate-500 dark:text-slate-400">
+                      {c.lastCallAt ? fromNow(c.lastCallAt) : '—'}
+                    </td>
+                    <td className="td text-slate-500 dark:text-slate-400">
+                      {dateOnly(c.nextFollowUpAt)}
+                    </td>
                     <td className="td">
                       <div className="flex justify-end gap-2">
                         <button className="btn-ghost btn-sm" onClick={() => openEdit(c)}>
@@ -213,7 +217,7 @@ export default function CustomersPage() {
                 ))}
                 {data.rows.length === 0 && (
                   <tr>
-                    <td className="td text-slate-500" colSpan={7}>
+                    <td className="td text-slate-500 dark:text-slate-400" colSpan={7}>
                       No customers match these filters.
                     </td>
                   </tr>
@@ -246,9 +250,7 @@ export default function CustomersPage() {
         }
       >
         <form id="customer-form" onSubmit={save} className="space-y-3">
-          {formError && (
-            <div className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{formError}</div>
-          )}
+          {formError && <div className="alert-error">{formError}</div>}
           <div className="grid grid-cols-2 gap-3">
             <Field label="Name">
               <TextInput
