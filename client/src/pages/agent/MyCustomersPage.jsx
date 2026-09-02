@@ -36,7 +36,11 @@ export default function MyCustomersPage() {
     setFormError(null)
     try {
       await api.post('/customers', {
-        ...form,
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        city: form.city.trim(),
+        notes: form.notes.trim(),
         nextFollowUpAt: form.nextFollowUpAt || null,
       })
       setOpen(false)

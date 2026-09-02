@@ -51,7 +51,7 @@ export default function CallConsolePage() {
       await api.post('/calls', {
         customerId: selectedId,
         status: form.status,
-        notes: form.notes,
+        notes: form.notes.trim(),
         saleAmount: isSale ? Number(form.saleAmount || 0) : undefined,
         followUpAt: form.followUpAt || null,
       })

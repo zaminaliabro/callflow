@@ -5,7 +5,7 @@ import { signToken } from '../utils/token.js'
 import { parseBody, unauthorized } from '../utils/http.js'
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().email(),
   password: z.string().min(1),
 })
 

@@ -7,11 +7,11 @@ const CUSTOMER_STATUS = ['NEW', 'INTERESTED', 'NOT_INTERESTED', 'CALLBACK', 'NO_
 const agentSelect = { select: { id: true, name: true, email: true } }
 
 const baseSchema = z.object({
-  name: z.string().min(2),
-  phone: z.string().min(3),
-  email: z.string().email().optional().or(z.literal('')),
-  city: z.string().optional().or(z.literal('')),
-  notes: z.string().optional().or(z.literal('')),
+  name: z.string().trim().min(2),
+  phone: z.string().trim().min(3),
+  email: z.string().trim().email().optional().or(z.literal('')),
+  city: z.string().trim().optional().or(z.literal('')),
+  notes: z.string().trim().optional().or(z.literal('')),
   assignedAgentId: z.string().optional().nullable(),
   nextFollowUpAt: z.coerce.date().optional().nullable(),
 })

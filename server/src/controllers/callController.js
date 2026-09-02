@@ -8,7 +8,7 @@ const logSchema = z
   .object({
     customerId: z.string().min(1),
     status: z.enum(CALL_STATUS),
-    notes: z.string().optional().or(z.literal('')),
+    notes: z.string().trim().optional().or(z.literal('')),
     saleAmount: z.coerce.number().min(0).optional(),
     followUpAt: z.coerce.date().optional().nullable(),
   })

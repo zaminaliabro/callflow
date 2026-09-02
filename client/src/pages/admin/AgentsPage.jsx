@@ -40,9 +40,9 @@ export default function AgentsPage() {
     setFormError(null)
     try {
       const payload = {
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
         monthlyTarget: Number(form.monthlyTarget || 0),
       }
       if (form.password) payload.password = form.password

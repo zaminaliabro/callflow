@@ -62,11 +62,11 @@ export default function CustomersPage() {
     setFormError(null)
     try {
       const payload = {
-        name: form.name,
-        phone: form.phone,
-        email: form.email,
-        city: form.city,
-        notes: form.notes,
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        city: form.city.trim(),
+        notes: form.notes.trim(),
         assignedAgentId: form.assignedAgentId || null,
         nextFollowUpAt: form.nextFollowUpAt || null,
       }

@@ -16,18 +16,18 @@ const publicSelect = {
 }
 
 const createSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
+  name: z.string().trim().min(2),
+  email: z.string().trim().email(),
   password: z.string().min(6),
-  phone: z.string().optional().or(z.literal('')),
+  phone: z.string().trim().optional().or(z.literal('')),
   monthlyTarget: z.coerce.number().min(0).default(0),
 })
 
 const updateSchema = z.object({
-  name: z.string().min(2).optional(),
-  email: z.string().email().optional(),
+  name: z.string().trim().min(2).optional(),
+  email: z.string().trim().email().optional(),
   password: z.string().min(6).optional(),
-  phone: z.string().optional().or(z.literal('')),
+  phone: z.string().trim().optional().or(z.literal('')),
   monthlyTarget: z.coerce.number().min(0).optional(),
   isActive: z.boolean().optional(),
 })
