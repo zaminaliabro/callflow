@@ -1,5 +1,18 @@
 import { useTheme } from '../context/ThemeContext.jsx'
 
+const SunIcon = (
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+  </svg>
+)
+
+const MoonIcon = (
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 3a6.4 6.4 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+  </svg>
+)
+
 export default function ThemeToggle({ className = '' }) {
   const { isDark, cycle } = useTheme()
   return (
@@ -7,10 +20,10 @@ export default function ThemeToggle({ className = '' }) {
       onClick={cycle}
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 bg-white text-base
-        hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 ${className}`}
+      className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600
+        hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white ${className}`}
     >
-      <span aria-hidden="true">{isDark ? '🌙' : '☀️'}</span>
+      {isDark ? MoonIcon : SunIcon}
     </button>
   )
 }
