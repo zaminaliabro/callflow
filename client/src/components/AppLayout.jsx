@@ -37,7 +37,7 @@ export default function AppLayout() {
         }`}
       >
         <div className="flex h-16 items-center gap-2 px-5 text-white">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-600 font-bold">callflow</span>
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-600 font-bold">C</span>
           <span className="text-lg font-bold">CallFlow</span>
         </div>
         <nav className="mt-4 space-y-1 px-3">
