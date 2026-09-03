@@ -2,27 +2,24 @@ import { createContext, useContext, useCallback, useEffect, useState } from 'rea
 
 const ThemeContext = createContext(null)
 const KEY = 'callflow_theme'
-const ORDER = ['light', 'dark', 'system']
 
 function prefersDark() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
-function resolve(theme) {
-  return theme === 'dark' || (theme === 'system' && prefersDark())
-}
-
 function apply(theme) {
-  document.documentElement.classList.toggle('dark', resolve(theme))
+  document.documentElement.classList.toggle('dark', theme === 'dark')
 }
 
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(() => {
     try {
-      return localStorage.getItem(KEY) || 'system'
+      const saved = localStorage.getItem(KEY)
+      if (saved === 'light' || saved === 'dark') return saved
     } catch {
-      return 'system'
+      /* ignore */
     }
+    return prefersDark() ? 'dark' : 'light'
   })
 
   const setTheme = useCallback((next) => {
@@ -36,23 +33,15 @@ export function ThemeProvider({ children }) {
   }, [])
 
   const cycle = useCallback(() => {
-    setTheme(ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length])
+    setTheme(theme === 'dark' ? 'light' : 'dark')
   }, [theme, setTheme])
 
-  // Keep in sync with OS changes while on "system".
   useEffect(() => {
     apply(theme)
-    if (theme !== 'system') return
-    const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = () => apply('system')
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
   }, [theme])
 
-  const isDark = resolve(theme)
-
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, cycle, isDark }}>
+    <ThemeContext.Provider value={{ theme, setTheme, cycle, isDark: theme === 'dark' }}>
       {children}
     </ThemeContext.Provider>
   )
